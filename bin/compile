@@ -9,13 +9,14 @@ CACHE_DIR=$2
 function download_and_install_jdk {
   	curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
 	. bin/java
-	echo -n "-----> Installing OpenJDK ${javaVersion}..."
+	echo -n "-----> Installing OpenJDK 1.8..."
 	install_java ${BUILD_DIR} "1.8"
 	echo "done"
 }
 
 function download_and_install_groovy {
-	echo "-----> Installing groovy 2.3.6"
+	echo "-----> $PWD"
+	echo -n "-----> Installing groovy 2.3.6..."
 	curl -L -O -s http://dl.bintray.com/groovy/maven/groovy-binary-2.3.6.zip
 	jar xf groovy-binary-2.3.6.zip
 	chmod -R +x groovy-2.3.6
