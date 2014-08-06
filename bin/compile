@@ -19,7 +19,7 @@ function download_and_install_groovy {
 	curl -L -O -s http://dl.bintray.com/groovy/maven/groovy-binary-2.3.6.zip
 	jar xf groovy-binary-2.3.6.zip
 	chmod -R +x groovy-2.3.6
-	mv groovy-2.3.6 /bin
+	cp -R groovy-2.3.6 /bin
 	export PATH="/bin/groovy-2.3.6/bin:$PATH"
 	echo "done"
 }
