@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-# fail fast
-set -e
-
-BUILD_DIR=$1
-CACHE_DIR=$2
+mkdir -p "$1" "$2"
+build=$(cd "$1/" && pwd)
 
 function download_and_install_jdk {
   	curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
@@ -15,15 +12,19 @@ function download_and_install_jdk {
 }
 
 function download_and_install_groovy {
-	echo "-----> $PWD"
+	cd $1
 	echo -n "-----> Installing groovy 2.3.6..."
 	curl -L -O -s http://dl.bintray.com/groovy/maven/groovy-binary-2.3.6.zip
+	mkdir -p vendor/groovy
 	jar xf groovy-binary-2.3.6.zip
 	chmod -R +x groovy-2.3.6
-	cp -R groovy-2.3.6 ${CACHE_DIR}
+	cp -R groovy-2.3.6 vendor/groovy
 	export PATH="${CACHE_DIR}/groovy-2.3.6/bin:$PATH"
 	echo "done"
 }
 
 download_and_install_jdk
 download_and_install_groovy
+
+mkdir -p $build/.profile.d
+echo 'PATH=$PATH:/app/vendor/groovy/bin' > $build/.profile.d/groovy.sh
