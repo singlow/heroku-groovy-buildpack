@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 mkdir -p "$1" "$2"
-build=$(cd "$1/" && pwd)
+BUILD_DIR=$1
+CACHE_DIR=$2
 
 function download_and_install_jdk {
   	curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
@@ -12,19 +13,19 @@ function download_and_install_jdk {
 }
 
 function download_and_install_groovy {
-	cd $1
 	echo -n "-----> Installing groovy 2.3.6..."
-	curl -L -O -s http://dl.bintray.com/groovy/maven/groovy-binary-2.3.6.zip
-	pwd
-	mkdir -p vendor/groovy
-	jar xf groovy-binary-2.3.6.zip
-	chmod -R +x groovy-2.3.6
-	cp -R groovy-2.3.6 vendor/groovy
+	if [ ! -d "${CACHE_DIR}/groovy-2.3.6" ]; then
+		curl -L -O -s http://dl.bintray.com/groovy/maven/groovy-binary-2.3.6.zip
+		jar xf groovy-binary-2.3.6.zip
+		chmod -R +x groovy-2.3.6
+		mv groovy-2.3.6 ${CACHE_DIR}
+	fi
+	cp -R ${CACHE_DIR}/groovy-2.3.6 ${BUILD_DIR}/groovy-2.3.6
+	echo "java.runtime.version=1.8" > ${BUILD_DIR}/system.properties
+	PATH="$PATH:${BUILD_DIR}/groovy-2.3.6/bin"
+	export PATH
 	echo "done"
 }
 
 download_and_install_jdk
 download_and_install_groovy
-
-mkdir -p $build/.profile.d
-echo 'PATH=$PATH:/app/vendor/groovy/bin' > $build/.profile.d/groovy.sh
