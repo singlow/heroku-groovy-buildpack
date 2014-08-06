@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# fail fast
+set -e
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+function download_and_install_jdk {
+  curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
+  . bin/java
+
+  # create default system.properties for apps that had the jdk vendored in
+  if [ -f ${CACHE_DIR}/.jdk/vendor ]; then
+    echo "java.runtime.version=1.8" > ${BUILD_DIR}/system.properties
+  fi
+
+  if [ -f ${CACHE_DIR}/system.properties ]; then
+    cp ${CACHE_DIR}/system.properties ${BUILD_DIR}/system.properties
+  fi
+
+  # install JDK
+  if [ -f ${BUILD_DIR}/system.properties ]; then
+    mkdir -p $CACHE_DIR
+    logger -p user.notice -t "slugc[$$]" "language_pack_java download_jdk"
+    LOGGER_FLAGS="$LOGGER_FLAGS download_jdk"
+    javaVersion=$(detect_java_version ${BUILD_DIR})
+    echo -n "-----> Installing OpenJDK ${javaVersion}..."
+    install_java ${BUILD_DIR} ${javaVersion}
+    jdk_overlay ${BUILD_DIR}
+    echo "done"
+    cp ${BUILD_DIR}/system.properties ${CACHE_DIR}/
+  fi
+}
+
+function download_and_install_groovy {
+	echo "-----> Installing groovy 2.3.6"
+	# -L option to follow the redirect
+	curl -L -O http://dl.bintray.com/groovy/maven/groovy-binary-2.3.6.zip
+	# unzip
+	unzip groovy-binary-2.3.6.zip -d ${CACHE_DIR}
+	# set PATH
+	PATH=$CACHE_DIR/groovy-2.3.6/bin:$PATH
+}
+
+
+download_and_install_jdk
+download_and_install_groovy
