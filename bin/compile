@@ -15,7 +15,7 @@ function download_and_install_groovy {
 	cd $1
 	echo -n "-----> Installing groovy 2.3.6..."
 	curl -L -O -s http://dl.bintray.com/groovy/maven/groovy-binary-2.3.6.zip
-	ls -l
+	pwd
 	mkdir -p vendor/groovy
 	jar xf groovy-binary-2.3.6.zip
 	chmod -R +x groovy-2.3.6
