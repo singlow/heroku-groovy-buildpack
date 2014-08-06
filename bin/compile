@@ -6,10 +6,6 @@ set -e
 BUILD_DIR=$1
 CACHE_DIR=$2
 
-indent() {
-  sed -u 's/^/       /'
-}
-
 function download_and_install_jdk {
   curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
   . bin/java
