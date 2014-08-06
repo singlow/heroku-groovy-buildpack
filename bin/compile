@@ -10,14 +10,7 @@ function download_and_install_jdk {
   curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
   . bin/java
 
-  # create default system.properties for apps that had the jdk vendored in
-  if [ -f ${CACHE_DIR}/.jdk/vendor ]; then
-    echo "java.runtime.version=1.8" > ${BUILD_DIR}/system.properties
-  fi
-
-  if [ -f ${CACHE_DIR}/system.properties ]; then
-    cp ${CACHE_DIR}/system.properties ${BUILD_DIR}/system.properties
-  fi
+  echo "java.runtime.version=1.8" > ${BUILD_DIR}/system.properties
 
   # install JDK
   if [ -f ${BUILD_DIR}/system.properties ]; then
