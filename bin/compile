@@ -36,8 +36,8 @@ function download_and_install_jdk {
 function download_and_install_groovy {
 	echo "-----> Installing groovy 2.3.6"
 	# -L option to follow the redirect
-	curl -L -O http://dl.bintray.com/groovy/maven/groovy-binary-2.3.6.zip
-	gzip groovy-binary-2.3.6.zip
+	curl -L -O -s http://dl.bintray.com/groovy/maven/groovy-binary-2.3.6.zip
+	jar xf groovy-binary-2.3.6.zip
 	mv groovy-2.3.6 ${CACHE_DIR}
 	# set PATH
 	PATH=$CACHE_DIR/groovy-2.3.6/bin:$PATH
