@@ -1,4 +1,4 @@
-# heroku-grrovy-buildpack
+# heroku-groovy-buildpack
 
 A buildpack for [Heroku](https://heroku.com/) to run [Groovy](http://groovy.codehaus.org/) programs/scripts.
 
