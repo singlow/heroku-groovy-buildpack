@@ -1,9 +1,4 @@
 #!/bin/sh
 
-# this pack is valid for apps with a groovy.conf in the root
-if [ -f $1/groovy.conf ]; then
-  echo "Groovy"
-  exit 0
-else
-  exit 1
-fi
+echo "Groovy"
+exit 0
